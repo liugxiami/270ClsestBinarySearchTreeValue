@@ -44,27 +44,36 @@ public class Main {
 
         return res;
     }
-    //2.recursion
-    /*public static int closestValue2(TreeNode root,double target){
-        double dif= Double.MAX_VALUE;
-        int res=0;
-        bs(root,target,dif,res);
-        return res;
+   //2.recursion
+    public static int closestValue(TreeNode root,double target){
+        if(root==null)return -1;
+        double closeValue=Double.MAX_VALUE;
+        return (int)core(root,target,closeValue);
+
     }
-    public static void bs(TreeNode curr,double target,double dif,int res){
-        if(target==curr.val) {
-            res=curr.val;
-            return;
+    public static double core(TreeNode root,double target,double closeValue){
+        double diff=Math.abs(target-root.val);
+        double minDiff=Math.abs(closeValue-target);
+        closeValue=minDiff<diff?closeValue:root.val;
+        if(target<root.val&&root.left!=null)return core(root.left,target,closeValue);
+        if(target>root.val&&root.right!=null)return core(root.right,target,closeValue);
+        return closeValue;
+    }
+    //3.bfs
+    public static int closestValue1(TreeNode root,double target){
+        if(root==null)return -1;
+        Queue<TreeNode> queue=new LinkedList<>();
+        queue.offer(root);
+        int closeValue=Integer.MAX_VALUE;
+        while(!queue.isEmpty()){                    //isEmpty()判断
+            TreeNode curr=queue.poll();
+            double diff=Math.abs(target-curr.val);
+            closeValue=Math.abs(closeValue-target)<diff?closeValue:curr.val;
+            if(target<curr.val&&curr.left!=null)queue.offer(curr.left);    //offer进queue时，注意不为空，null也是可以进queue的
+            if(target>curr.val&&curr.right!=null)queue.offer(curr.right);
         }
-
-        if(dif>Math.abs(curr.val-target)){
-            dif=Math.abs(curr.val-target);
-            res=curr.val;
-        }
-
-        if(target<curr.val) bs(curr.left,target,dif,res);
-        else bs(curr.right,target,dif,res);
-    }*/
+        return closeValue;
+    }
 }
 class TreeNode{
     public int val;
